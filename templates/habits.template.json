@@ -1,0 +1,15 @@
+{
+  "activities": {
+    "walking": { "met": 3.0, "notes": "normal pace" },
+    "gym": { "met": 3.5, "notes": "resistance training at the gym, regular effort" },
+    "running": { "met": 9.8 },
+    "cycling": { "met": 7.5 },
+    "swimming": { "met": 7.0, "notes": "pool, moderate freestyle" },
+    "yoga": { "met": 2.5 }
+  },
+  "daily_defaults": [],
+  "aliases": {
+    "banana": { "id": "banana", "amount": 90, "unit": "g", "notes": "one medium banana, peeled" }
+  },
+  "notes": "MET values from the Compendium of Physical Activities."
+}

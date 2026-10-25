@@ -1,0 +1,11 @@
+{
+  "activities": {
+    "walking": { "met": 3.0, "notes": "normal pace" },
+    "gym": { "met": 3.5 }
+  },
+  "daily_defaults": [],
+  "aliases": {
+    "banana": { "id": "banana", "amount": 90, "unit": "g" }
+  },
+  "notes": "MET values from the Compendium."
+}

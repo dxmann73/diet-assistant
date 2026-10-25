@@ -1,0 +1,14 @@
+{
+  "language": "de",
+  "sex": null,
+  "birth_year": null,
+  "height_cm": null,
+  "start_weight_kg": null,
+  "activity_factor": 1.2,
+  "max_deficit_kcal": 500,
+  "protein_floor_g_per_kg": 1.0,
+  "protein_target_g_per_kg": 1.25,
+  "protein_top_g_per_kg": 1.5,
+  "fat_g_per_kg": 0.8,
+  "away_day_deficit_kcal": 200
+}

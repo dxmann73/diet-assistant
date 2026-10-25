@@ -1,0 +1,16 @@
+{
+  "activities": {
+    "walking": { "met": 3.0 },
+    "gym": { "met": 3.5 }
+  },
+  "daily_defaults": [
+    { "section": "food", "line": "- 08:00 example 1 serving  # breakfast" },
+    { "section": "exercise", "line": "- 19:30 walking 30min  # evening walk" },
+    { "section": "exercise", "line": "- 07:00 walking 10min  # morning walk" }
+  ],
+  "aliases": {
+    "banana": { "id": "banana", "amount": 90, "unit": "g" },
+    "bread": { "id": "rye_bread" }
+  },
+  "notes": "test fixture"
+}

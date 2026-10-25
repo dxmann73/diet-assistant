@@ -1,0 +1,15 @@
+{
+  "activities": {
+    "gehen": { "met": 3.0, "notes": "normales Tempo" },
+    "krafttraining": { "met": 3.5, "notes": "Krafttraining im Fitnessstudio, übliche Anstrengung" },
+    "laufen": { "met": 9.8 },
+    "radfahren": { "met": 7.5 },
+    "schwimmen": { "met": 7.0, "notes": "Schwimmbecken, Kraulen mit mäßiger Anstrengung" },
+    "yoga": { "met": 2.5 }
+  },
+  "daily_defaults": [],
+  "aliases": {
+    "banane": { "id": "banane", "amount": 90, "unit": "g", "notes": "eine mittelgroße Banane, geschält" }
+  },
+  "notes": "MET-Werte aus dem Compendium of Physical Activities."
+}

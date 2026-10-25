@@ -1,0 +1,14 @@
+{
+  "language": "en",
+  "sex": "male",
+  "birth_year": 1980,
+  "height_cm": 180,
+  "start_weight_kg": 80.0,
+  "activity_factor": 1.2,
+  "max_deficit_kcal": 500,
+  "protein_floor_g_per_kg": 1.0,
+  "protein_target_g_per_kg": 1.25,
+  "protein_top_g_per_kg": 1.5,
+  "fat_g_per_kg": 0.8,
+  "away_day_deficit_kcal": 200
+}
