@@ -16,7 +16,7 @@ Ein Beispiel für das Rezeptformat, mit Lebensmitteln aus der Grundauswahl. Aben
 morgens essen. Protokolliere es als `- 08:00 rezept_beispiel 1 Portion`.
 Die Datei bleibt als Referenz erhalten, bis du darum bittest, sie zu löschen.
 
-## Zutaten (Werte pro 100 g)
+## Zutaten (Werte pro 100 g / 100 ml)
 
 | Zutat | Menge | kcal | Fett g | Kohlenhydrate g | Eiweiß g |
 | --- | --- | ---: | ---: | ---: | ---: |

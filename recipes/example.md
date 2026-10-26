@@ -15,7 +15,7 @@ serving_carbs_g: 51.25
 An example of the recipe format, built from the starter foods. Mix in the evening, eat in the
 morning. Log it as `- 08:00 example 1 serving`. It stays as a reference until you ask to delete it.
 
-## Ingredients (values per 100 g)
+## Ingredients (values per 100 g / 100 ml)
 
 | ingredient | qty | kcal | fat g | carbs g | protein g |
 | --- | --- | ---: | ---: | ---: | ---: |

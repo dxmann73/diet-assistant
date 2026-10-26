@@ -14,7 +14,7 @@ serving_carbs_g: 0.00
 
 Ein Satz zum Gericht. Protokolliere es als `- HH:MM rezept_id 1 Portion`.
 
-## Zutaten (Werte pro 100 g)
+## Zutaten (Werte pro 100 g / 100 ml)
 
 | Zutat | Menge | kcal | Fett g | Kohlenhydrate g | Eiweiß g |
 | --- | --- | ---: | ---: | ---: | ---: |

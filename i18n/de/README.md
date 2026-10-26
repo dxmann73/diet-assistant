@@ -1,8 +1,9 @@
 # diet-assistant
 
-Ein KI-Agent, der dir hilft, Fett abzubauen und Muskeln zu erhalten. Du sagst ihm in einfachen
-Worten, was du gegessen und wie du dich bewegt hast. Er führt ein tägliches Protokoll in Markdown,
-führt kleine Node-Skripte für die Berechnungen aus und sagt dir, wo du stehst.
+Ein KI-Agent, der dir hilft, dein Wunschgewicht zu erreichen, ohne einfach nur zu hungern: Fett
+abbauen, Muskeln erhalten. Du sagst ihm in einfachen Worten, was du gegessen und wie du dich
+bewegt hast. Er führt ein tägliches Protokoll in Markdown, führt kleine Node-Skripte für die
+Berechnungen aus und sagt dir, wo du stehst.
 
 **Keine medizinische Beratung.** Dies ist ein Werkzeug zum Protokollieren, keine Diagnose oder
 Behandlung. Sprich mit einem Arzt, bevor du eine Diät beginnst, besonders bei einer Erkrankung.
@@ -33,8 +34,9 @@ Ein Nutzer hat dir diese URL gegeben und möchte eine eigene Kopie. Frage nach e
    `Richte mir https://github.com/dxmann73/diet-assistant ein`
    (alternativ auf Englisch: `Set me up with https://github.com/dxmann73/diet-assistant`).
 2. Der Agent erstellt deine eigene private Kopie und beginnt mit der Einrichtung: Er fragt nach
-   deiner Sprache, erklärt die Methode und führt dich durch einen kurzen Fragebogen. Manche
-   Agenten müssen zuerst im neuen Ordner neu gestartet werden; sage danach „initialize“.
+   deiner Sprache, erklärt die Methode und stellt fünf kurze Fragen (Geschlecht, Geburtsjahr,
+   Größe, Gewicht, Alltag). Alles andere lernt er unterwegs. Manche Agenten müssen zuerst im
+   neuen Ordner neu gestartet werden; sage danach „initialize“.
 3. Erzähle ihm danach einfach, was du gegessen und gemacht hast: „Frühstück 08:00, 60 g
    Haferflocken mit 200 g Joghurt“, „40 Minuten spazieren gegangen“, „heute berechnen“.
 
@@ -43,28 +45,44 @@ Gesundheitsdaten, und ein Fork eines öffentlichen Repositorys ist öffentlich.
 
 ## Die Methode
 
-- **Mäßiges Defizit mit Obergrenze.** Die Obergrenze beträgt standardmäßig 500 kcal am Tag.
-  Unter dem Erhaltungsbedarf zu essen ist das Ziel; nur das Überschreiten der Obergrenze führt
-  zu einer Warnung. Ein größeres Defizit ist schwer durchzuhalten. Die meisten geben nach
-  wenigen Wochen auf, und Muskelverlust wird sehr wahrscheinlich. Das verfehlt das Ziel.
-- **Sport erhöht die Untergrenze.** Jede beim Sport verbrauchte kcal erhöht die Untergrenze
-  der Aufnahme um eins. Die Netto-Aufnahme-Untergrenze bleibt gleich.
-- **Eiweiß nach Körpergewicht.** Untergrenze 1.0 g/kg (die einzige Eiweißwarnung), Ziel
-  1.25 g/kg, Obergrenze des Bereichs 1.5 g/kg, anhand des Gewichts für den Tag.
-- **Krafttraining** ist das wichtigste Signal, um Muskeln zu erhalten. Protokolliere es wie
-  jede sportliche Aktivität.
-- **Sportarten.** Schwimmen, Laufen/Joggen, Fahrradfahren und Training im Fitnessstudio werden
-  protokolliert. Tempo, Intensität und Trainingsart bestimmen den passenden MET-Wert.
-- **Wiegen.** Tägliches Wiegen (morgens, nüchtern, unter gleichen Bedingungen) wird empfohlen,
-  ist aber nie Pflicht. Das 7-Tage-Mittel zählt, nicht einzelne Messwerte.
-- **Der Erhaltungsbedarf folgt deinem Gewicht.** Er wird täglich aus dem 7-Tage-Mittel neu
-  berechnet. Wenn das Mittel drei Wochen lang nicht gesunken ist, schlägt der Agent vor, die
-  Ziele zu überprüfen.
-- **Diagramm.** Tatsächliches Gewicht im Vergleich zu einem theoretischen Gewicht aus den
-  aufsummierten Defiziten (7700 kcal pro kg). Ein wachsender Abstand zeigt, dass die Schätzungen
-  abweichen.
-- **Keine Schätzungen ins Blaue.** Die Werte jedes Lebensmittels stammen aus der Datenbank oder
-  werden erfragt.
+Ziel ist, dein Wunschgewicht zu erreichen, ohne einfach nur zu hungern. Wer nur hungert, bringt
+den Körper dazu, seinen Energieverbrauch zu senken und, wenn er sich wenig bewegt, Muskeln
+abzubauen. Drei Grundsätze:
+
+1. **Höchstens 500 kcal Defizit am Tag.** So bleibt es erträglich, und du hältst durch.
+2. **Iss immer mindestens deinen Grundumsatz** (das, was der Körper in Ruhe verbraucht).
+3. **Beweg dich jeden Tag so viel wie möglich**, um die 500 kcal zu erreichen. Wenn du dich
+   mehr bewegst, iss so viel, dass das Defizit bei höchstens 500 kcal bleibt.
+
+Der Grund: Bei 500 kcal bleibt der Hunger begrenzt und auch über längere Zeit erträglich, und
+der Körper baut kaum oder gar keine Muskeln ab.
+
+- **Wiegen.** Morgens, nüchtern, nach dem Toilettengang, immer unter gleichen Bedingungen. Das
+  7-Tage-Mittel zählt, nicht der einzelne Wert.
+- **Schätzen ist erlaubt.** An Tagen, an denen du dich nicht wiegen kannst, auswärts isst oder
+  zu einem Essen oder einer Feier eingeladen bist: einfach schätzen und es nicht zu genau
+  nehmen. Die Methode ist auf lange Sicht angelegt.
+- **Vorgaben sind Informationen.** Eiweiß (Untergrenze 1.0 g/kg, Ziel 1.25 g/kg, Obergrenze
+  1.5 g/kg), Fett (0.8 g/kg) und die Defizitgrenze (500 kcal) sind Vorgaben. Du kannst sie
+  jederzeit ändern.
+
+## Das Diagramm
+
+![Tatsächliches und theoretisches Gewicht über fünf Monate](docs/chart-example.png)
+
+Ein echtes Protokoll über fünf Monate (Beschriftung auf Englisch). Das Diagramm hat zwei Linien:
+
+- **Theoretisches Gewicht** (blau, gestrichelt): beginnt beim ersten Wiegen und sinkt um das
+  berechnete Defizit jedes Tages, mit 7700 kcal pro kg. Das Defizit ergibt sich aus dem
+  Erhaltungsbedarf (Grundumsatz × Aktivitätsfaktor für deinen Alltag) minus dem, was du
+  gegessen hast, plus dem Verbrauch beim Sport. Gefüllte Punkte sind abgeschlossene Tage, hohle
+  Punkte offene oder geschätzte Tage.
+- **Tatsächliches Gewicht** (grün): deine morgendlichen Wiegewerte.
+
+Einzelne Werte schwanken mit Wasser und Essen; es zählt der Verlauf. Laufen die beiden Linien
+über Wochen auseinander, stimmen die Schätzungen nicht (zum Beispiel der Aktivitätsfaktor oder
+die Portionsgrößen), und es ist Zeit, sie zu überprüfen. (Die dünne orange Linie bei 80 kg ist
+eine persönliche Ziellinie aus diesem Protokoll; sie gehört nicht zur Vorlage.)
 
 ## So funktioniert es (mit wenig Code)
 
@@ -75,13 +93,14 @@ Der Agent versteht dich; die Skripte rechnen.
 - `scripts/compute-day.js` berechnet den Tag: Grundumsatz (BMR, Mifflin-St Jeor),
   Erhaltungsbedarf, Aufnahme, Verbrauch Sport (MET × kg × hours), Defizit, Nährstoffziele und
   Warnungen, jeweils mit Rechenweg. Der Agent fügt die Ausgabe ins Protokoll ein und ändert nie
-  die Zahlen.
+  die Zahlen. Der Erhaltungsbedarf folgt dem 7-Tage-Mittel des Gewichts.
 - `scripts/check-protocols.js` erkennt Protokolle, deren Zusammenfassung und Zahlen nicht
   übereinstimmen; `scripts/gen-chart-cdn.js` zeichnet `charts/chart-cdn.html`.
 - Deine Einstellungen stehen in drei Dateien, die der Agent bei der Einrichtung schreibt:
   `profile.json` (Körperdaten und Ziele), `habits.json` (MET-Werte für Sport, tägliche
   Standardeinträge, was „eine Banane“ für dich bedeutet), `rules.md` (Vorlieben wie der
-  Antwortstil).
+  Antwortstil). Wiederholt sich eine Mahlzeit oder Aktivität, bietet der Agent an, daraus ein
+  Rezept oder einen täglichen Standardeintrag zu machen.
 
 Alles ist einfaches Markdown und JSON und auch ohne den Agenten lesbar. Node 20 oder neuer,
 keine Abhängigkeiten.
@@ -97,6 +116,7 @@ foods/foods.md       Lebensmitteldatenbank, beginnt mit 15 Grundnahrungsmitteln
 recipes/             zusammengesetzte Gerichte, je eine Datei
 protocols/           eine Datei pro Tag
 charts/              das Diagramm zum Gewichtsverlauf
+docs/                das Bild für die README
 scripts/             die Berechnungen
 templates/           Vorlagen für die obigen Dateien
 test/                Tests für die Skripte

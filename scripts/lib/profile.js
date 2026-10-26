@@ -4,7 +4,7 @@
 
 const path = require('path');
 const { readJson, round2, fmt } = require('./util');
-const { LANGUAGES } = require('./labels');
+const { LANGUAGES, labelsFor } = require('./labels');
 const { ID_RE, unitFor } = require('./data');
 const { parseFoodLine, parseExerciseLine } = require('./grammar');
 
@@ -89,6 +89,12 @@ function validateProfile(p, year) {
 
 function loadProfile(root, year) {
   return validateProfile(readJson(path.join(root, 'profile.json'), 'profile.json'), year);
+}
+
+// Labels in the profile language, for scripts' status and warning lines.
+// Fails fast like loadProfile when profile.json is missing or invalid.
+function profileLabels(root, year) {
+  return labelsFor(loadProfile(root, year).language);
 }
 
 function validateHabits(h, items, L) {
@@ -177,6 +183,7 @@ module.exports = {
   ACTIVITY_FACTORS,
   validateProfile,
   loadProfile,
+  profileLabels,
   validateHabits,
   loadHabits,
   targets,

@@ -1,8 +1,8 @@
 # diet-assistant
 
-An AI agent that helps you lose fat while keeping muscle. You tell it what you ate and how you
-moved, in plain words. It keeps a daily log in Markdown, runs small Node scripts for the math,
-and tells you where you stand.
+An AI agent that helps you reach the weight you want without just starving: lose fat, keep
+muscle. You tell it what you ate and how you moved, in plain words. It keeps a daily log in
+Markdown, runs small Node scripts for the math, and tells you where you stand.
 
 **Not medical advice.** This is a tracking tool, not a diagnosis or a treatment. Talk to a doctor
 before you start a diet, especially with a health condition. It is not for people under 18,
@@ -29,8 +29,9 @@ then:
    `Set me up with https://github.com/dxmann73/diet-assistant`
    (German: `Richte mir https://github.com/dxmann73/diet-assistant ein`).
 2. The agent makes your own private copy and starts onboarding: it asks for your language,
-   explains the approach, and walks you through a short questionnaire. Some agents need a
-   restart in the new folder first; then say "initialize".
+   explains the approach, and asks five short questions (sex, birth year, height, weight,
+   daily life). Everything else it learns as you go. Some agents need a restart in the new
+   folder first; then say "initialize".
 3. From then on, just tell it what you ate and did: "Breakfast 08:00, 60 g oats with 200 g
    yogurt", "walked 40 minutes", "compute today".
 
@@ -39,23 +40,40 @@ public.
 
 ## The approach
 
-- **Moderate deficit, capped.** Default cap 500 kcal a day. Eating below maintenance is the goal;
-  only exceeding the cap is flagged. A bigger deficit is hard to keep up, most people give up
-  within a few weeks, and it makes muscle loss very likely, which defeats the goal.
-- **Exercise raises the floor.** Every kcal burned in exercise raises the intake floor by one.
-  The net intake floor stays the same.
-- **Protein by bodyweight.** Floor 1.0 g/kg (the only protein flag), target 1.25 g/kg, top of the
-  range 1.5 g/kg, from the day's weight.
-- **Resistance training** is the main signal to keep muscle. Log it like any exercise.
-- **Sports.** Swimming, running/jogging, cycling and gym training are logged. Pace, intensity
-  and type of training set the matching MET value.
-- **Weigh-ins.** A daily weigh-in (morning, fasted, same conditions) is recommended, never
-  required. The 7-day average counts, not single readings.
-- **Maintenance follows your weight.** It is recomputed daily from the 7-day average. When the
-  average has not dropped for three weeks, the agent suggests reassessing.
-- **Chart.** Actual weight against a theoretical weight from the summed deficits
-  (7700 kcal per kg). A widening gap means the estimates drift.
-- **No guessing.** Every food is costed from the database or asked about.
+The goal is to reach the weight you want without just starving. Starving alone makes the body
+cut its energy use and, if you move little, lose muscle. Three principles:
+
+1. **At most 500 kcal deficit a day.** That keeps it bearable, so you can keep going.
+2. **Always eat at least your BMR** (basal metabolic rate, what the body burns at rest).
+3. **Move as much as you can every day** to reach the 500 kcal. If you move more, eat enough
+   that the deficit stays at 500 kcal at most.
+
+The reason: at 500 kcal, hunger stays limited and bearable for longer, and the body loses
+little or no muscle.
+
+- **Weighing.** In the morning, fasted, after the toilet, always under the same conditions. The
+  7-day average counts, not a single reading.
+- **Estimating is fine.** On days you cannot weigh yourself, eat out, or go to a dinner or a
+  party, just estimate and don't be too precise. The method is built for the long term.
+- **Defaults are information.** Protein (floor 1.0 g/kg, target 1.25 g/kg, top 1.5 g/kg), fat
+  (0.8 g/kg) and the deficit cap (500 kcal) are defaults. You can change them any time.
+
+## The chart
+
+![Actual and theoretical weight over five months](docs/chart-example.png)
+
+A real log over five months. The chart has two lines:
+
+- **Theoretical weight** (blue, dashed): starts at your first weigh-in and drops by each day's
+  computed deficit, at 7700 kcal per kg. The deficit comes from maintenance (BMR × the activity
+  factor for your daily life), minus what you ate, plus what exercise burned. Filled points
+  are closed days; hollow points are open or estimated days.
+- **Actual weight** (green): your morning weigh-ins.
+
+Day-to-day readings jump with water and food; the trend is what counts. If the two lines drift
+apart for weeks, the estimates are off (for example the activity factor or portion sizes) and it
+is time to reassess. (The thin orange line at 80 kg is a personal goal line from that log; it is
+not part of the template.)
 
 ## How it works (low code)
 
@@ -64,13 +82,15 @@ The agent understands you; the scripts do the arithmetic.
 - The agent turns your words into resolved lines in `protocols/YYYY-MM-DD.md`, asks about
   anything unknown, and adds new foods to `foods/foods.md`.
 - `scripts/compute-day.js` computes the day: BMR (Mifflin-St Jeor), maintenance, intake, burn
-  (MET × kg × hours), deficit, macro targets and flags, all with the working shown. The agent
+  (MET × kg × hours), deficit, macro targets and flags, all with the working shown.
+  Maintenance follows the 7-day average weight. The agent
   pastes its output into the log and never edits the numbers.
 - `scripts/check-protocols.js` catches logs whose summary and numbers disagree;
   `scripts/gen-chart-cdn.js` draws `charts/chart-cdn.html`.
 - Your settings live in three files the agent writes during onboarding: `profile.json` (body data
   and targets), `habits.json` (exercise MET values, daily defaults, what "a banana" means for
-  you), `rules.md` (preferences such as reply style).
+  you), `rules.md` (preferences such as reply style). When a meal or activity repeats, the
+  agent offers to make it a recipe or a daily default.
 
 Everything is plain Markdown and JSON, readable without the agent. Node 20 or newer, no
 dependencies.
@@ -86,6 +106,7 @@ foods/foods.md       food database, starts with 15 staples
 recipes/             composed dishes, one file each
 protocols/           one file per day
 charts/              the weight chart
+docs/                the README picture
 scripts/             the math
 templates/           starting points for the files above
 test/                tests for the scripts

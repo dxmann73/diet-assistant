@@ -11,16 +11,9 @@ in `habits.json`.
 
 ## Reihenfolge des Berichts
 
-Wenn das Abendessen protokolliert oder der Tag abgeschlossen wird:
+In jedem Bericht:
 
-1. Das Diagramm (siehe „Diagrammanzeige“).
+1. Das Diagramm: direkt im Chat, wenn der Agent es anzeigen kann, sonst ein Hinweis auf
+   `charts/chart-cdn.html`.
 2. Offene Fragen, alle auf einmal. Überspringe diesen Punkt, wenn es keine gibt.
 3. Das Defizit des Tages, dann der Rest der Bilanz.
-
-## Diagrammanzeige
-
-- CHART_DISPLAY
-
-## Wiegen
-
-- WEIGH_IN_HABIT

@@ -10,16 +10,8 @@ with a number or an id (amounts, MET values, daily defaults) go to `habits.json`
 
 ## Report order
 
-When dinner is logged or the day is closed:
+In every report:
 
-1. The chart (see "Chart display").
+1. The chart: inline if the agent can show it, otherwise a pointer to `charts/chart-cdn.html`.
 2. Open questions, all in one batch. Skip this when there are none.
 3. The day's deficit, then the rest of the balance.
-
-## Chart display
-
-- CHART_DISPLAY
-
-## Weigh-in
-
-- WEIGH_IN_HABIT

@@ -10,17 +10,18 @@ const { enRoot, deRoot, writeProtocol } = require('./helpers');
 // Fixture user: male, born 1980, 180 cm, factor 1.2, cap 500. In 2030 the age is 50.
 // At 80.0 kg: BMR 10 × 80 + 6.25 × 180 − 5 × 50 + 5 = 1680; maintenance 2016; floor 1516.
 
-test('flagged day: per-item intake, burn, deficit and both flags', () => {
+test('flagged day: per-item intake, burn, deficit and all three flags', () => {
   const root = enRoot();
   writeProtocol(root, '2030-01-15', {
     weight: 80.0,
+    status: 'closed',
     food: ['- 08:00 example 1 serving  # oats', '- 12:30 banana 90g  # a banana'],
     exercise: ['- 07:00 walking 10min  # walk', '- 18:00 gym 60min  # gym'],
   });
   const { block, bodyText } = compute(root, '2030-01-15');
   // example 369.00 + banana 0.9 × 79 = 71.10 → 440.10; walk 3.0 × 80 × 10/60 = 40, gym 3.5 × 80 = 280.
   assert.deepEqual(block, {
-    status: 'open',
+    status: 'closed',
     maintenance_kcal: 2016,
     deficit_kcal: 1895.9,
     intake_kcal: 440.1,
@@ -33,15 +34,73 @@ test('flagged day: per-item intake, burn, deficit and both flags', () => {
   assert.match(bodyText, /\| 12:30 \| banana \| 90 g \| 0\.9 × per 100 g \| 71\.10 \| 1\.17 \| 0\.36 \| 14\.31 \|/);
   assert.match(bodyText, /3\.5 × 80\.00 kg × 60\/60 h \| 280\.00 \|/);
   assert.match(bodyText, /- intake: 440\.10 kcal/);
-  assert.match(bodyText, /1516\.00 \+ 320\.00 burn = 1836\.00 kcal/);
+  // Burn lifts the floor above BMR: max(1680, 1516 + 320) = 1836.
+  assert.match(bodyText, /intake floor today: max\(BMR 1680\.00, 1516\.00 \+ 320\.00 burn\) = 1836\.00 kcal/);
   assert.match(bodyText, /protein 19\.17 g is below the floor of 80\.00 g/i);
+  assert.match(bodyText, /intake 440\.10 kcal is below the BMR of 1680\.00 kcal/i);
   assert.match(bodyText, /deficit 1895\.90 kcal is above the cap of 500 kcal/i);
+  assert.doesNotMatch(bodyText, /day still open/);
+});
+
+test('BMR flag on its own: deficit within the cap, intake below BMR', () => {
+  const root = enRoot();
+  writeProtocol(root, '2030-01-15', {
+    weight: 80.0,
+    status: 'closed',
+    food: ['- 08:00 example 4 serving  # oats', '- 13:00 tofu 100g  # tofu'],
+  });
+  const { block, bodyText } = compute(root, '2030-01-15');
+  // 1476 + 115 = 1591 < BMR 1680; deficit 2016 − 1591 = 425, under the cap; protein 72 + 15.5 = 87.5.
+  assert.equal(block.deficit_kcal, 425);
+  assert.match(bodyText, /intake floor today: max\(BMR 1680\.00, 1516\.00 \+ 0\.00 burn\) = 1680\.00 kcal/);
+  assert.match(bodyText, /### Flags\n\n- intake 1591\.00 kcal is below the BMR of 1680\.00 kcal\n\n/);
+});
+
+test('open day: one info line instead of the protein, deficit and BMR flags', () => {
+  const root = enRoot();
+  const food = ['- 08:00 example 1 serving  # oats', '- 12:30 banana 90g  # a banana'];
+  const exercise = ['- 07:00 walking 10min  # walk', '- 18:00 gym 60min  # gym'];
+  writeProtocol(root, '2030-01-15', { weight: 80.0, food, exercise });
+  const both = compute(root, '2030-01-15').bodyText;
+  // 1836 − 440.10 = 1395.90 kcal; 80 − 19.17 = 60.83 g.
+  assert.match(
+    both,
+    /### Flags\n\n- day still open, still to go: 1395\.90 kcal to the intake floor, 60\.83 g protein to the floor\n\n/
+  );
+  assert.doesNotMatch(both, /is below the|is above the cap/);
+
+  // Protein reached: only the kcal part is left. 1796 − 1706 = 90.
+  writeProtocol(root, '2030-01-15', {
+    weight: 80.0,
+    food: ['- 08:00 example 4 serving  # oats', '- 13:00 tofu 200g  # tofu'],
+    exercise: ['- 18:00 gym 60min  # gym'],
+  });
+  assert.match(
+    compute(root, '2030-01-15').bodyText,
+    /### Flags\n\n- day still open, still to go: 90\.00 kcal to the intake floor\n\n/
+  );
+
+  // Both floors reached.
+  writeProtocol(root, '2030-01-15', {
+    weight: 80.0,
+    food: ['- 08:00 example 4 serving  # oats', '- 13:00 tofu 200g  # tofu'],
+  });
+  assert.match(compute(root, '2030-01-15').bodyText, /### Flags\n\n- day still open, still to go: none\n\n/);
+});
+
+test('open day keeps the stall flag', () => {
+  const root = enRoot();
+  writeProtocol(root, '2030-01-01', { weight: 80.0 });
+  writeProtocol(root, '2030-01-22', { weight: 80.5 });
+  const body = compute(root, '2030-01-22').bodyText;
+  assert.match(body, /- day still open, still to go: .*\n- weight stall: /);
 });
 
 test('clean day: no flags, macro deltas against target', () => {
   const root = enRoot();
   writeProtocol(root, '2030-01-15', {
     weight: 80.0,
+    status: 'closed',
     food: ['- 08:00 example 4 serving  # oats', '- 13:00 tofu 200g  # tofu'],
   });
   const { block, bodyText } = compute(root, '2030-01-15');
@@ -183,6 +242,28 @@ test('German: German ids, units, headings and labels', () => {
   assert.match(bodyText, /- Aufnahme: 486\.10 kcal/);
   assert.match(bodyText, /- Defizit: 1303\.20 kcal/);
   assert.match(bodyText, /Grundumsatz \(Mifflin-St Jeor, weiblich\)/);
+  // max(1389, 1166.80 + 122.50 = 1289.30) = 1389; 1389 − 486.10 = 902.90.
+  assert.match(
+    bodyText,
+    /Untergrenze Aufnahme heute: max\(Grundumsatz 1389\.00, 1166\.80 \+ 122\.50 Verbrauch\) = 1389\.00 kcal/
+  );
+  assert.match(bodyText, /- Tag noch offen, es fehlen noch: 902\.90 kcal bis zur Untergrenze Aufnahme, [\d.]+ g Eiweiß/);
+});
+
+test('German: closed-day flags and an open day with nothing left', () => {
+  const root = deRoot();
+  writeProtocol(root, '2030-01-15', { language: 'de', status: 'closed' });
+  const closed = compute(root, '2030-01-15').bodyText;
+  assert.match(closed, /- Eiweiß 0\.00 g liegt unter der Untergrenze von 70\.00 g/);
+  assert.match(closed, /- Aufnahme 0\.00 kcal liegt unter dem Grundumsatz von 1389\.00 kcal/);
+  assert.match(closed, /- Defizit 1666\.80 kcal liegt über der Obergrenze von 500 kcal/);
+
+  // 9 × 253 = 2277 kcal, 9 × 7.90 = 71.10 g: both floors reached.
+  writeProtocol(root, '2030-01-16', {
+    language: 'de',
+    food: ['- 08:00 rezept_beispiel 9 Portion  # Haferflocken'],
+  });
+  assert.match(compute(root, '2030-01-16').bodyText, /- Tag noch offen, es fehlen noch: nichts\n/);
 });
 
 test('German: English tokens are rejected', () => {

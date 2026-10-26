@@ -13,7 +13,7 @@
 const { parseArgs, runMain, today } = require('./lib/util');
 const { labelsFor } = require('./lib/labels');
 const { readProtocol, protocolFiles, METRIC_KEYS } = require('./lib/frontmatter');
-const { loadProfile } = require('./lib/profile');
+const { loadProfile, profileLabels } = require('./lib/profile');
 
 const USAGE = 'node scripts/check-protocols.js [--root <dir>]';
 const TOLERANCE = 0.01; // kcal: guards float formatting, not real edits
@@ -96,7 +96,7 @@ function main(argv) {
     for (const p of problems) console.error(`  ${p}`);
     process.exit(1);
   }
-  console.log(`OK: ${checked} protocols, frontmatter matches body`);
+  console.log(profileLabels(opts.root, Number(today().slice(0, 4))).protocols_ok(checked));
 }
 
 module.exports = { check };

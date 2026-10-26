@@ -1,11 +1,11 @@
 {
   "activities": {
-    "walking": { "met": 3.0, "notes": "normal pace" },
-    "gym": { "met": 3.5, "notes": "resistance training at the gym, regular effort" },
-    "running": { "met": 9.8 },
-    "cycling": { "met": 7.5 },
-    "swimming": { "met": 7.0, "notes": "pool, moderate freestyle" },
-    "yoga": { "met": 2.5 }
+    "walking": { "met": 3.0, "notes": "normal pace, about 4 km/h; brisk, about 5.5 km/h: 4.3" },
+    "gym": { "met": 3.5, "notes": "resistance training at the gym, regular effort; vigorous: 6.0" },
+    "running": { "met": 9.8, "notes": "about 10 km/h (6:00 min/km); 8 km/h (7:30 min/km): 8.3; 12 km/h (5:00 min/km): 11.5" },
+    "cycling": { "met": 7.5, "notes": "general; leisurely, under 16 km/h: 4.0; 19 to 22 km/h: 8.0" },
+    "swimming": { "met": 7.0, "notes": "pool, moderate freestyle; slow: 5.8; fast: 9.8" },
+    "yoga": { "met": 2.5, "notes": "hatha; power yoga: 4.0" }
   },
   "daily_defaults": [],
   "aliases": {

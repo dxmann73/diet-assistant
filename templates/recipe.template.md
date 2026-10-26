@@ -14,7 +14,7 @@ serving_carbs_g: 0.00
 
 One line on what this is. Log it as `- HH:MM recipe_id 1 serving`.
 
-## Ingredients (values per 100 g)
+## Ingredients (values per 100 g / 100 ml)
 
 | ingredient | qty | kcal | fat g | carbs g | protein g |
 | --- | --- | ---: | ---: | ---: | ---: |

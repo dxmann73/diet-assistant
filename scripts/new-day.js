@@ -10,7 +10,7 @@ const path = require('path');
 const { parseArgs, runMain, checkDate } = require('./lib/util');
 const { labelsFor } = require('./lib/labels');
 const { loadItems } = require('./lib/data');
-const { loadProfile, loadHabits } = require('./lib/profile');
+const { loadProfile, loadHabits, profileLabels } = require('./lib/profile');
 
 const USAGE = 'node scripts/new-day.js <YYYY-MM-DD> [--root <dir>]';
 const PLACEHOLDERS = ['{{date}}', '{{food_lines}}', '{{exercise_lines}}'];
@@ -62,7 +62,7 @@ function newDay(root, date) {
 function main(argv) {
   const opts = parseArgs(argv, { positional: ['date'], usage: USAGE });
   newDay(opts.root, opts.date);
-  console.log(`Wrote protocols/${opts.date}.md`);
+  console.log(profileLabels(opts.root, Number(opts.date.slice(0, 4))).wrote(`protocols/${opts.date}.md`));
 }
 
 module.exports = { newDay };

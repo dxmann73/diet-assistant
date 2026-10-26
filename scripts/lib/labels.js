@@ -66,8 +66,8 @@ const LABELS = {
     floor: 'floor',
     target: 'target',
     top: 'top',
-    intake_floor: (floor, burn, sum) =>
-      `intake floor today: ${floor} + ${burn} burn = ${sum} kcal`,
+    intake_floor: (bmr, floor, burn, result) =>
+      `intake floor today: max(BMR ${bmr}, ${floor} + ${burn} burn) = ${result} kcal`,
     estimated_day: (d) => `estimated day, deficit assumed: ${d} kcal`,
     estimated_from_block: 'value already in the metrics block',
     estimated_from_profile: 'away_day_deficit_kcal from profile.json',
@@ -75,6 +75,11 @@ const LABELS = {
     none: 'none',
     flag_protein: (p, floor) => `protein ${p} g is below the floor of ${floor} g`,
     flag_deficit: (d, cap) => `deficit ${d} kcal is above the cap of ${cap} kcal`,
+    flag_bmr: (i, bmr) => `intake ${i} kcal is below the BMR of ${bmr} kcal`,
+    // Open day: one info line instead of the protein, deficit and BMR flags.
+    open_day: (parts) => `day still open, still to go: ${parts.length ? parts.join(', ') : 'none'}`,
+    open_kcal: (k) => `${k} kcal to the intake floor`,
+    open_protein: (g) => `${g} g protein to the floor`,
     flag_stall: (now, before) =>
       `weight stall: 7-day mean ${now} kg is not below ${before} kg three weeks ` +
       'earlier, time to reassess the targets',
@@ -89,6 +94,14 @@ const LABELS = {
     // check-profile.js
     profile_ok: 'OK: profile.json, habits.json and rules.md are valid.',
     start_weight_note: 'start_weight_kg',
+
+    // Script status lines (stdout) and warnings (stderr)
+    wrote: (file) => `Wrote ${file}`,
+    protocols_ok: (n) => `OK: ${n} protocols, frontmatter matches body`,
+    warn_gap_days: (n, kcal, dates) =>
+      `WARN: ${n} day(s) with no protocol file, charted at the ${kcal} kcal away-day assumption: ${dates}`,
+    warn_no_weighin: 'WARN: no weigh-in yet; the chart is empty until the first one',
+    warn_implausible: (list) => `WARN: implausible deficit(s), verify the block: ${list}`,
 
     // Chart
     chart_title: 'Actual vs theoretical weight (kg)',
@@ -159,14 +172,18 @@ const LABELS = {
     floor: 'Untergrenze',
     target: 'Ziel',
     top: 'Obergrenze',
-    intake_floor: (floor, burn, sum) =>
-      `Untergrenze Aufnahme heute: ${floor} + ${burn} Verbrauch = ${sum} kcal`,
+    intake_floor: (bmr, floor, burn, result) =>
+      `Untergrenze Aufnahme heute: max(Grundumsatz ${bmr}, ${floor} + ${burn} Verbrauch) = ${result} kcal`,
     estimated_day: (d) => `geschätzter Tag, angenommenes Defizit: ${d} kcal`,
     estimated_from_block: 'Wert aus dem metrics-Block',
     estimated_from_profile: 'away_day_deficit_kcal aus profile.json',
     none: 'keine',
     flag_protein: (p, floor) => `Eiweiß ${p} g liegt unter der Untergrenze von ${floor} g`,
     flag_deficit: (d, cap) => `Defizit ${d} kcal liegt über der Obergrenze von ${cap} kcal`,
+    flag_bmr: (i, bmr) => `Aufnahme ${i} kcal liegt unter dem Grundumsatz von ${bmr} kcal`,
+    open_day: (parts) => `Tag noch offen, es fehlen noch: ${parts.length ? parts.join(', ') : 'nichts'}`,
+    open_kcal: (k) => `${k} kcal bis zur Untergrenze Aufnahme`,
+    open_protein: (g) => `${g} g Eiweiß bis zur Untergrenze`,
     flag_stall: (now, before) =>
       `Gewicht stagniert: 7-Tage-Mittel ${now} kg liegt nicht unter ${before} kg ` +
       'von vor drei Wochen, Zeit die Ziele zu prüfen',
@@ -180,6 +197,13 @@ const LABELS = {
 
     profile_ok: 'OK: profile.json, habits.json und rules.md sind gültig.',
     start_weight_note: 'start_weight_kg',
+
+    wrote: (file) => `${file} geschrieben`,
+    protocols_ok: (n) => `OK: ${n} Protokolle, Frontmatter passt zum berechneten Abschnitt`,
+    warn_gap_days: (n, kcal, dates) =>
+      `WARNUNG: ${n} Tag(e) ohne Protokolldatei, im Diagramm mit der Abwesenheits-Annahme von ${kcal} kcal: ${dates}`,
+    warn_no_weighin: 'WARNUNG: noch kein Wiegen; das Diagramm bleibt bis zum ersten Wiegen leer',
+    warn_implausible: (list) => `WARNUNG: unplausibles Defizit, bitte den metrics-Block prüfen: ${list}`,
 
     chart_title: 'Tatsächliches vs. theoretisches Gewicht (kg)',
     chart_actual: 'Tatsächliches Gewicht (kg)',

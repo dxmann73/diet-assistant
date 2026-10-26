@@ -12,7 +12,7 @@ const path = require('path');
 const { parseArgs, runMain, addDays, today } = require('./lib/util');
 const { labelsFor } = require('./lib/labels');
 const { loadProfile } = require('./lib/profile');
-const { extract } = require('./extract-data');
+const { extract, implausible } = require('./extract-data');
 
 const USAGE = 'node scripts/gen-chart-cdn.js [--root <dir>]';
 const KCAL_PER_KG = 7700;
@@ -147,24 +147,24 @@ new Chart(document.getElementById('chart'), {
 function generate(root) {
   const profile = loadProfile(root, Number(today().slice(0, 4)));
   const L = labelsFor(profile.language);
-  const { data, gapDays } = chartData(extract(root), profile.away_day_deficit_kcal);
+  const rows = extract(root);
+  const wild = implausible(rows);
+  if (wild.length) console.error(L.warn_implausible(wild.join(', ')));
+  const { data, gapDays } = chartData(rows, profile.away_day_deficit_kcal);
   if (gapDays.length) {
-    console.error(
-      `WARN: ${gapDays.length} day(s) with no protocol file, charted at the ` +
-        `${profile.away_day_deficit_kcal} kcal away-day assumption: ${gapDays.join(', ')}`
-    );
+    console.error(L.warn_gap_days(gapDays.length, profile.away_day_deficit_kcal, gapDays.join(', ')));
   }
-  if (!data.length) console.error('WARN: no weigh-in yet; the chart is empty until the first one');
+  if (!data.length) console.error(L.warn_no_weighin);
   const outDir = path.join(root, 'charts');
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'chart-cdn.html'), html(L, profile.language, data));
-  return { data, gapDays };
+  return { data, gapDays, L };
 }
 
 function main(argv) {
   const opts = parseArgs(argv, { usage: USAGE });
-  generate(opts.root);
-  console.log('Wrote charts/chart-cdn.html');
+  const { L } = generate(opts.root);
+  console.log(L.wrote('charts/chart-cdn.html'));
 }
 
 module.exports = { chartData, generate };

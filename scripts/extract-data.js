@@ -8,8 +8,9 @@
 //
 // usage: node scripts/extract-data.js [--root <dir>]
 
-const { parseArgs, runMain } = require('./lib/util');
+const { parseArgs, runMain, today } = require('./lib/util');
 const { readProtocol, protocolFiles } = require('./lib/frontmatter');
+const { profileLabels } = require('./lib/profile');
 
 const USAGE = 'node scripts/extract-data.js [--root <dir>]';
 
@@ -27,23 +28,24 @@ function extract(root) {
       net_intake_kcal: p.metrics.net_intake_kcal,
     };
   });
-
-  // Sanity check, not a silent correction: flag magnitudes that almost always
-  // mean a bad number was copied into the block.
-  const wild = rows
-    .filter((r) => Math.abs(r.deficit_kcal) > 1500)
-    .map((r) => `${r.date}=${r.deficit_kcal}`);
-  if (wild.length) {
-    console.error(`WARN: implausible deficit(s), verify the block: ${wild.join(', ')}`);
-  }
   return rows;
+}
+
+// Sanity check, not a silent correction: magnitudes that almost always mean a
+// bad number was copied into the block. Callers print the localized warning.
+function implausible(rows) {
+  return rows.filter((r) => Math.abs(r.deficit_kcal) > 1500).map((r) => `${r.date}=${r.deficit_kcal}`);
 }
 
 function main(argv) {
   const opts = parseArgs(argv, { usage: USAGE });
-  console.log(JSON.stringify(extract(opts.root), null, 2));
+  const L = profileLabels(opts.root, Number(today().slice(0, 4)));
+  const rows = extract(opts.root);
+  const wild = implausible(rows);
+  if (wild.length) console.error(L.warn_implausible(wild.join(', ')));
+  console.log(JSON.stringify(rows, null, 2));
 }
 
-module.exports = { extract };
+module.exports = { extract, implausible };
 
 if (require.main === module) runMain(main);

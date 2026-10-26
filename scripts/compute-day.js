@@ -155,7 +155,9 @@ function compute(root, date) {
     out.push(`- ${L.net_intake}: ${fmt(net)} kcal (${L.net_intake_note})`);
     out.push(`- ${L.maintenance}: ${fmt(t.maintenance)} kcal`);
     out.push(`- ${L.deficit}: ${fmt(deficit)} kcal (${L.deficit_note})`);
-    out.push(`- ${L.intake_floor(fmt(t.floor), fmt(burn), fmt(t.floor + burn))}`);
+    // Never eat below BMR; exercise raises the net intake floor 1:1.
+    const intakeFloor = round2(Math.max(t.bmr, t.floor + burn));
+    out.push(`- ${L.intake_floor(fmt(t.bmr), fmt(t.floor), fmt(burn), fmt(intakeFloor))}`);
     out.push(
       `- ${L.protein}: ${fmt(protein)} g (${L.floor} ${fmt(t.proteinFloor)}, ${L.target} ` +
         `${fmt(t.proteinTarget)}, ${L.top} ${fmt(t.proteinTop)}; ${L.vs_target} ` +
@@ -167,8 +169,19 @@ function compute(root, date) {
       ''
     );
 
-    if (protein < t.proteinFloor) flags.push(L.flag_protein(fmt(protein), fmt(t.proteinFloor)));
-    if (deficit > profile.max_deficit_kcal) flags.push(L.flag_deficit(fmt(deficit), profile.max_deficit_kcal));
+    if (status === 'open') {
+      // Partial totals would raise false alarms; say what is still missing instead.
+      const parts = [];
+      const kcalLeft = round2(intakeFloor - intake);
+      const proteinLeft = round2(t.proteinFloor - protein);
+      if (kcalLeft > 0) parts.push(L.open_kcal(fmt(kcalLeft)));
+      if (proteinLeft > 0) parts.push(L.open_protein(fmt(proteinLeft)));
+      flags.push(L.open_day(parts));
+    } else {
+      if (protein < t.proteinFloor) flags.push(L.flag_protein(fmt(protein), fmt(t.proteinFloor)));
+      if (intake < t.bmr) flags.push(L.flag_bmr(fmt(intake), fmt(t.bmr)));
+      if (deficit > profile.max_deficit_kcal) flags.push(L.flag_deficit(fmt(deficit), profile.max_deficit_kcal));
+    }
   }
 
   if (st.stalled) flags.push(L.flag_stall(fmt(st.now.mean), fmt(st.before.mean)));

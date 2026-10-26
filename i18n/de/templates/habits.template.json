@@ -1,11 +1,11 @@
 {
   "activities": {
-    "gehen": { "met": 3.0, "notes": "normales Tempo" },
-    "krafttraining": { "met": 3.5, "notes": "Krafttraining im Fitnessstudio, übliche Anstrengung" },
-    "laufen": { "met": 9.8 },
-    "radfahren": { "met": 7.5 },
-    "schwimmen": { "met": 7.0, "notes": "Schwimmbecken, Kraulen mit mäßiger Anstrengung" },
-    "yoga": { "met": 2.5 }
+    "gehen": { "met": 3.0, "notes": "normales Tempo, etwa 4 km/h; zügig, etwa 5.5 km/h: 4.3" },
+    "krafttraining": { "met": 3.5, "notes": "Krafttraining im Fitnessstudio, übliche Anstrengung; intensiv: 6.0" },
+    "laufen": { "met": 9.8, "notes": "etwa 10 km/h (6:00 min/km); 8 km/h (7:30 min/km): 8.3; 12 km/h (5:00 min/km): 11.5" },
+    "radfahren": { "met": 7.5, "notes": "allgemein; gemütlich, unter 16 km/h: 4.0; 19 bis 22 km/h: 8.0" },
+    "schwimmen": { "met": 7.0, "notes": "Schwimmbecken, Kraulen mit mäßiger Anstrengung; langsam: 5.8; schnell: 9.8" },
+    "yoga": { "met": 2.5, "notes": "Hatha; Power-Yoga: 4.0" }
   },
   "daily_defaults": [],
   "aliases": {

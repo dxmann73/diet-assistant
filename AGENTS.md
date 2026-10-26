@@ -4,9 +4,10 @@ Instructions for the AI agent working in this repo.
 
 ## Purpose
 
-Help one person lose fat while keeping muscle. They tell you what they ate and how they moved;
-you log it in a daily protocol, run the scripts that do the math, and report the result. Metric
-units only (kg, cm, g, ml, kcal).
+Help one person reach the weight they want without just starving, losing fat and keeping muscle
+(see [the approach](#the-approach)). They tell you what they ate and how they moved; you log it
+in a daily protocol, run the scripts that do the math, and report the result. Metric units only
+(kg, cm, g, ml, kcal).
 
 ## Start of every session
 
@@ -29,13 +30,16 @@ recipe totals (see [Recipes](#recipes)).
 Fail fast. Never guess macros, amounts or MET values. If something is unknown, ask. If a script
 throws, fix the input it names, or ask the user; never work around it.
 
+Every file you create stays inside this folder. Write no scratch files to `/tmp` or anywhere
+else; if you need one, create it here and delete it before you finish.
+
 ## Files
 
 | file | holds | who changes it |
 | --- | --- | --- |
 | `profile.json` | body data and targets | you, only after the user confirms |
 | `habits.json` | MET per activity, daily defaults, food-name aliases | you, when the user teaches a rule |
-| `rules.md` | preferences without numbers: reply style, report order, chart display | you, when the user teaches a rule |
+| `rules.md` | preferences without numbers: reply style, report order | you, when the user teaches a rule |
 | `protocols/YYYY-MM-DD.md` | one file per day | you, every day |
 | `foods/foods.md` | food database | you, when a new food appears |
 | `recipes/<id>.md` | composed dishes | you, when the user describes one |
@@ -68,7 +72,9 @@ All run with Node 20 or newer, no dependencies. All accept `--root <dir>` (defau
    changed it, edit the line.
 2. Turn every message into protocol lines (see [Protocol grammar](#protocol-grammar)). Resolve
    words through `habits.json` aliases first. Ask when an amount, a food or an activity is
-   unclear. "A handful" is not an amount; ask for grams.
+   unclear. "A handful" is not an amount; ask for grams. A food word that can mean several
+   things ("bread", "coffee", "cheese"): ask once what the user means, then offer to remember it
+   as an alias (see [Learning rules](#learning-rules)).
 3. A weigh-in goes into the frontmatter as `weight_kg: 79.3` (a bare number).
 4. After every edit to a protocol, run `node scripts/compute-day.js <date>`. Paste its two parts
    into the protocol **verbatim**: the `metrics:` block replaces the old `metrics:` block in the
@@ -76,10 +82,14 @@ All run with Node 20 or newer, no dependencies. All accept `--root <dir>` (defau
    (`## Computed`) to the end of the file. Never edit those numbers by hand.
 5. Then run `node scripts/check-protocols.js` and `node scripts/gen-chart-cdn.js`. Both must
    exit 0.
-6. Report from the script output: intake, burn, net intake, deficit, protein against floor and
-   target, fat and carbs against target, and every flag. Follow the report order and chart
-   display in `rules.md`. Without an `inline-vis` rule, tell the user to open
-   `charts/chart-cdn.html`.
+6. Report from the script output, in this order unless `rules.md` says otherwise:
+   1. The chart, always first. Show `charts/chart-cdn.html` inline if you can (for example
+      with an `inline-vis` directive); otherwise tell the user to open it.
+   2. Open questions, all in one batch. Skip this when there are none.
+   3. The day's deficit, then intake, burn, net intake, protein against floor and target, fat
+      and carbs against target, and every flag. On an open day, the open-day line says what is
+      still missing.
+7. Once breakfast, lunch, dinner and the day's activities are logged, ask "Close the day?".
 
 "Close the day" means: set `status: closed` in the metrics block, run steps 4 and 5 again, then
 commit the day's protocol and any new foods or recipes with `git commit`. Never push unless the
@@ -106,9 +116,11 @@ comment.
   per-piece foods, `serving` for recipes. Examples: `90g`, `250ml`, `2 pc`, `1 serving`.
 - `<activity_id>` is a key of `habits.json` `activities`. Duration in minutes only. If the user
   gives only a distance, ask how long it took.
-- Map swimming to `swimming`, running/jogging to `running`, cycling to `cycling` and strength
-  training at the gym to `gym`. For running/jogging ask for the pace, for other gym sessions ask
-  for the type of training; settle the matching MET value before computing.
+- Activities come from the table in `habits.json`. On the first mention of an activity, name
+  the entry and MET value you use, with its note (for example "gym, MET 3.5, regular effort"),
+  and go on; the user can correct it. Ask only when the activity is not in the table, or when
+  the user's pace or intensity differs from the note (the notes list variants such as running
+  paces). Then add or adjust the entry.
 - The computed heading `## Computed` and everything after it is script output; keep it last.
 
 Example:
@@ -156,20 +168,28 @@ metrics:
 - Weight for the day: mean of the weigh-ins in the 7 days ending that day; else the most recent
   earlier weigh-in; else `start_weight_kg`.
 - BMR, Mifflin-St Jeor: `10 × kg + 6.25 × cm − 5 × age + 5` (male) or `− 161` (female).
-- Maintenance: `BMR × activity_factor`. Net intake floor: `maintenance − max_deficit_kcal`.
+- Maintenance: `BMR × activity_factor`, recomputed daily from the day's weight. Net intake
+  floor: `maintenance − max_deficit_kcal`.
+- Intake floor today: `max(BMR, net intake floor + burn)`. Never eat below BMR; exercise
+  raises the floor one to one.
 - Burn per exercise: `MET × kg × hours`.
 - Net intake: `intake − burn`. Deficit: `maintenance − net intake`.
 - Protein floor / target / top and fat: g/kg × the day's weight. Carbs: the rest of maintenance.
 
-Flags, and nothing else:
+Flags on `closed` days, and nothing else:
 
 - Protein below the floor.
-- Deficit above `max_deficit_kcal`. Equivalent: intake below `floor + burn`. Exercise raises the
-  intake floor 1:1. The net intake floor stays the same.
+- Intake below BMR.
+- Deficit above `max_deficit_kcal`. Equivalent: intake below `net intake floor + burn`.
 - Weight stall: the 7-day mean is not below the 7-day mean three weeks earlier. Suggest
-  reassessing the targets.
+  reassessing the targets. This one also shows on `open` days.
+
+On an `open` day the totals are partial, so the scripts print no protein, BMR or deficit flags.
+They print one line instead: what is still missing to the intake floor (kcal) and to the
+protein floor (g), or "none".
 
 A deficit under the cap is the goal. Never flag it, never warn about eating below maintenance.
+Always pass on the deficit warning when the script prints it.
 
 ## Foods
 
@@ -190,8 +210,9 @@ A composed dish the user eats more than once becomes `recipes/<id>.md`, built fr
 - Frontmatter: `id` (equals the filename), `name`, `yield_units`, `yield_count`,
   `serving_default`, and the per-serving totals `serving_kcal`, `serving_protein_g`,
   `serving_fat_g`, `serving_carbs_g` (bare numbers).
-- Body: ingredient table with per-100 g values, per-ingredient totals
+- Body: ingredient table with values per 100 g / 100 ml, per-ingredient totals
   (quantity / 100 × value per 100 g), batch totals and per-serving totals. Show the working.
+  Write every total with two decimals (`174.00`, `3.35`).
 - You compute these totals yourself; it is the only arithmetic you do. Double-check each sum.
 - Ingredients stay inside the recipe file. They go into `foods/foods.md` only once the user
   eats them on their own.
@@ -207,7 +228,9 @@ When the user says "remember …", "from now on …", "always …" or similar:
   - an activity or MET value → `activities`, e.g. `"swimming": { "met": 7.0 }`
   - something done every day → `daily_defaults`, a resolved protocol line plus its section:
     `{ "section": "exercise", "line": "- 07:00 walking 10min  # morning walk" }`
-- Everything else (tone, report order, chart display, weigh-in habit) goes to `rules.md`.
+- Everything else (tone, report order) goes to `rules.md`.
+- Watch for repeats. When the same meal, drink or activity shows up on about three days,
+  propose a recipe (for a composed meal) and/or a daily default. Write it only on yes.
 - Run `node scripts/check-profile.js` after editing `habits.json`.
 - Tell the user which file you wrote.
 - A changed alias or default affects future days only. Never rewrite past protocols for it.
@@ -220,27 +243,31 @@ always gets the warning from [the approach](#the-approach) first, then a second 
 
 ## The approach
 
-Explain this during onboarding and whenever the user asks why:
+Explain this during onboarding and whenever the user asks why.
 
-- A moderate deficit, capped at 500 kcal a day by default. A deficit is the goal; only exceeding
-  the cap is flagged. A bigger deficit is hard to keep up (most people give up within weeks) and
-  makes muscle loss very likely, which defeats the goal.
-- Exercise raises the intake floor one to one: eat back what you burn above the cap.
-- Protein by bodyweight, from the day's weight: floor 1.0 g/kg (the only protein flag), target
-  1.25 g/kg, top of the range 1.5 g/kg.
-- Resistance training is the main signal to keep muscle. It is logged like any exercise.
-- A daily weigh-in (morning, fasted, after the toilet, same conditions) is recommended, never
-  required. The 7-day average matters, not single readings.
-- Maintenance follows the 7-day average weight automatically. A stall of more than three weeks
-  means it is time to reassess.
-- The chart compares the actual weight with a theoretical weight from the summed deficits
-  (7700 kcal per kg). A widening gap shows that estimates drift.
-- No guessed macros: every item is costed or asked about.
-- This is not medical advice.
+The goal is to reach the weight you want without just starving. Starving alone makes the body
+cut its energy use and, if you move little, lose muscle. Three principles:
+
+1. **At most 500 kcal deficit a day.** That keeps it bearable, so you can keep going.
+2. **Always eat at least your BMR** (basal metabolic rate, what the body burns at rest).
+3. **Move as much as you can every day** to reach the 500 kcal. If you move more, eat enough
+   that the deficit stays at 500 kcal at most.
+
+The reason: at 500 kcal, hunger stays limited and bearable for longer, and the body loses
+little or no muscle.
+
+- **Weighing.** In the morning, fasted, after the toilet, always under the same conditions. The
+  7-day average counts, not a single reading.
+- **Estimating is fine.** On days you cannot weigh yourself, eat out, or go to a dinner or a
+  party, just estimate and don't be too precise. The method is built for the long term.
+- **Defaults are information.** Protein (floor 1.0 g/kg, target 1.25 g/kg, top 1.5 g/kg), fat
+  (0.8 g/kg) and the deficit cap (500 kcal) are defaults. The user can change them any time.
+- **Not medical advice.** Not meant for people under 18, people who are pregnant or
+  breastfeeding, or people with a BMI under 18.5.
 
 ## Onboarding
 
-Ask questions in batches, not one by one. Keep it friendly and short.
+Keep it friendly and short. Ask nothing beyond what this section lists.
 
 1. **Trigger.** `profile.json` is missing or the user asks to start.
 2. **Language.** If the folder `i18n/` exists, ask in both languages: "English or Deutsch?".
@@ -252,41 +279,39 @@ Ask questions in batches, not one by one. Keep it friendly and short.
 3. **Remote.** Run `git remote -v`. If `origin` points at `dxmann73/diet-assistant`, warn: this
    is the public template, and pushing personal health data there would publish it. Offer to
    rename it with `git remote rename origin template`. Do it on yes.
-4. **Approach and disclaimer.** Explain [the approach](#the-approach) briefly and say clearly
-   that this is not medical advice. Safety gate: ask whether the user is pregnant or
-   breastfeeding. Once the body data from step 5.1 is in, also check age and BMI
-   (`kg / (m × m)`). Stop with a pointer to a doctor if they are pregnant or breastfeeding,
-   under 18, or have a BMI under 18.5. `check-profile.js` enforces age and BMI too.
-5. **Questionnaire**, in batches:
-   1. Body: sex (female/male, for the BMR formula), birth year, height in cm, current weight in kg.
-   2. Daily life **without** exercise: desk job (1.2), on your feet most of the day (1.375),
-      physical labour (1.55). Say that all exercise is logged separately. Never ask how much
-      they exercise per week; that would count exercise twice.
-   3. Deficit cap: default 500 kcal. Above 500: give the warning, then ask again.
-   4. Protein floor / target / top in g/kg (defaults 1.0 / 1.25 / 1.5) and fat in g/kg (default
-      0.8). Carbs are what is left.
-   5. Diet style and exclusions (vegan, vegetarian, allergies). Record them in `rules.md`.
-   6. Recurring habits: daily meals, drinks, walks as well as swimming, running/jogging, cycling
-      and gym training with their MET values (show the defaults from
-      `templates/habits.template.json`). A recurring meal becomes a recipe now: ask for each
-      ingredient in grams and its values per 100 g from the label. The user may say "skip for
-      now"; a skipped meal is not a daily default until its recipe exists.
-   7. Food-name defaults, optional: what do "coffee", "bread", "cheese" … mean for them?
-      Resolve to starter foods where they fit; ask label values for the rest.
-   8. Weigh-in habit; away-day deficit (default 200 kcal); chart display: `inline-vis` (only if
-      their agent supports it) or "open the file" (default).
-6. **Write the files.** `profile.json` from `templates/profile.template.json` (inputs only; the
-   `language` stays as the template has it); `habits.json` from `templates/habits.template.json`
-   with their activities, daily defaults and aliases; `rules.md` from
-   `templates/rules.template.md` with the placeholders replaced; recipes and new foods. Then run
-   `node scripts/check-profile.js` and show its output: BMR, maintenance, floor and macro
-   targets with working. Ask the user to confirm. On a change, edit and run it again.
-7. **First day.** Run `node scripts/new-day.js $(date +%F)`. Onboarding ends only when
-   `check-profile.js` passes. Commit: `git add -A && git commit -m "Set up profile"`.
+4. **Explanation.** Explain [the approach](#the-approach) in a few sentences: the goal, the
+   three principles and the reason, weighing, estimating, and that the defaults are information.
+   Say clearly that this is not medical advice and not meant for people under 18, people who
+   are pregnant or breastfeeding, or people with a BMI under 18.5. State it; do not ask about
+   it.
+5. **Questionnaire**, one batch with exactly these questions:
+   - sex (female/male, for the BMR formula)
+   - birth year
+   - height in cm
+   - current weight in kg
+   - daily life **without** exercise: desk job (1.2), on your feet most of the day (1.375),
+     physical labour (1.55). Say that all exercise is logged separately. Never ask how much
+     they exercise; that would count exercise twice.
+
+   Ask nothing else: no targets, no deficit cap, no diet style, no activities, no daily meals,
+   no food words, no weigh-in habit. Activities, meals and food words come up in daily use (see
+   [Daily workflow](#daily-workflow) and [Learning rules](#learning-rules)).
+6. **Write the files.** `profile.json` from `templates/profile.template.json` with the five
+   answers (`sex`, `birth_year`, `height_cm`, `start_weight_kg`, `activity_factor`); every other
+   value keeps the template default. `habits.json` is `templates/habits.template.json` as it
+   is; `rules.md` is `templates/rules.template.md` as it is. Run
+   `node scripts/check-profile.js`. If it stops at the age or BMI gate, stop onboarding with a
+   pointer to a doctor. Otherwise show its output as information: BMR, maintenance, net intake
+   floor and macro targets with working, and say that all of it can be changed any time. Ask
+   no confirmation question.
+7. **First day.** Run `node scripts/new-day.js $(date +%F)`. Do not compute or report a balance
+   yet. Commit: `git add -A && git commit -m "Set up profile"`. Then tell the user to just say
+   what they eat and do.
 8. **Later updates** ("update my profile"): change only what the user confirms, never overwrite
    silently, and run `check-profile.js` again.
 
 ## Reply style
 
 Concise and plain, in the user's language. Show the script output that matters, not your own
-arithmetic. `rules.md` can override this.
+arithmetic. Never cite these instructions to the user (no "AGENTS.md step 6"); just act on them.
+`rules.md` can override this.
