@@ -56,8 +56,11 @@ little or no muscle.
   That is completely normal and no reason to worry. What counts is the 7-day average.
 - **Estimating is fine.** On days you cannot weigh yourself, eat out, or go to a dinner or a
   party, just estimate and don't be too precise. The method is built for the long term.
-- **Defaults are information.** Protein (floor 1.0 g/kg, target 1.25 g/kg, top 1.5 g/kg), fat
-  (0.8 g/kg) and the deficit cap (500 kcal) are defaults. You can change them any time.
+- **Protein and fat.** The recommendation is at least 1.0 g of protein per kg of body weight
+  (target 1.25 g/kg, top 1.5 g/kg). The log tracks it because many people eat too little
+  protein. For fat it is 0.8 g per kg.
+- **The deficit cap is a default.** You can change the 500 kcal in `profile.json`
+  (`max_deficit_kcal`), or just ask the agent to change it.
 
 ## The chart
 

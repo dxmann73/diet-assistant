@@ -63,9 +63,11 @@ der Körper baut kaum oder gar keine Muskeln ab.
 - **Schätzen ist erlaubt.** An Tagen, an denen du dich nicht wiegen kannst, auswärts isst oder
   zu einem Essen oder einer Feier eingeladen bist: einfach schätzen und es nicht zu genau
   nehmen. Die Methode ist auf lange Sicht angelegt.
-- **Vorgaben sind Informationen.** Eiweiß (Untergrenze 1.0 g/kg, Ziel 1.25 g/kg, Obergrenze
-  1.5 g/kg), Fett (0.8 g/kg) und die Defizitgrenze (500 kcal) sind Vorgaben. Du kannst sie
-  jederzeit ändern.
+- **Eiweiß und Fett.** Empfohlen ist mindestens 1.0 g Eiweiß pro kg Körpergewicht (Ziel
+  1.25 g/kg, Obergrenze 1.5 g/kg). Das Protokoll verfolgt das, weil viele Menschen zu wenig
+  Eiweiß essen. Für Fett sind es 0.8 g pro kg.
+- **Die Defizitgrenze ist eine Vorgabe.** Du kannst die 500 kcal in `profile.json`
+  (`max_deficit_kcal`) ändern oder einfach den Assistenten bitten, sie zu ändern.
 
 ## Das Diagramm
 

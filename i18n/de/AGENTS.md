@@ -286,9 +286,12 @@ der Körper baut kaum oder gar keine Muskeln ab.
 - **Schätzen ist erlaubt.** An Tagen, an denen man sich nicht wiegen kann, auswärts isst oder
   zu einem Essen oder einer Feier eingeladen ist: einfach schätzen und es nicht zu genau
   nehmen. Die Methode ist auf lange Sicht angelegt.
-- **Vorgaben sind Informationen.** Eiweiß (Untergrenze 1.0 g/kg, Ziel 1.25 g/kg, Obergrenze
-  1.5 g/kg), Fett (0.8 g/kg) und die Defizitgrenze (500 kcal) sind Vorgaben. Der Nutzer kann
-  sie jederzeit ändern.
+- **Eiweiß und Fett.** Empfohlen ist mindestens 1.0 g Eiweiß pro kg Körpergewicht (Ziel
+  1.25 g/kg, Obergrenze 1.5 g/kg). Das Protokoll verfolgt das, weil viele Menschen zu wenig
+  Eiweiß essen. Für Fett sind es 0.8 g pro kg.
+- **Die Defizitgrenze ist eine Vorgabe.** Der Nutzer kann die 500 kcal in `profile.json`
+  (`max_deficit_kcal`) ändern oder den Assistenten darum bitten; siehe
+  [Profiländerungen](#profiländerungen).
 - **Keine medizinische Beratung.** Nicht gedacht für Menschen unter 18, Schwangere und
   Stillende sowie Menschen mit einem BMI unter 18.5.
 
@@ -310,7 +313,8 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
    Gesundheitsdaten dorthin zu übertragen würde sie veröffentlichen. Biete an, es mit
    `git remote rename origin template` umzubenennen. Führe das bei Zustimmung aus.
 4. **Erklärung.** Erkläre [die Methode](#die-methode) in wenigen Sätzen: das Ziel, die drei
-   Grundsätze und den Grund, das Wiegen, das Schätzen und dass die Vorgaben Informationen sind.
+   Grundsätze und den Grund, das Wiegen, das Schätzen, Eiweiß und Fett und dass die
+   Defizitgrenze eine Vorgabe ist.
    Sage deutlich, dass dies keine medizinische Beratung ist und dass die Methode nicht für
    Menschen unter 18, Schwangere und Stillende sowie Menschen mit einem BMI unter 18.5 gedacht
    ist. Sage es; frage nicht danach.
@@ -323,10 +327,10 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
      körperliche Arbeit (1.55). Sage, dass Sport immer getrennt protokolliert wird. Frage nie,
      wie viel Sport der Nutzer macht; das würde Sport doppelt zählen.
 
-   Frage nichts anderes: keine Ziele, keine Defizitgrenze, keine Ernährungsweise, keine
-   Aktivitäten, keine täglichen Mahlzeiten, keine Lebensmittelwörter, keine Wiegegewohnheit.
-   Aktivitäten, Mahlzeiten und Lebensmittelwörter ergeben sich im Alltag (siehe
-   [Täglicher Ablauf](#täglicher-ablauf) und [Regeln lernen](#regeln-lernen)).
+   Frage nichts anderes: keine Ziele, keine Defizitgrenze (das bietet Schritt 6 an), keine
+   Ernährungsweise, keine Aktivitäten, keine täglichen Mahlzeiten, keine Lebensmittelwörter,
+   keine Wiegegewohnheit. Aktivitäten, Mahlzeiten und Lebensmittelwörter ergeben sich im Alltag
+   (siehe [Täglicher Ablauf](#täglicher-ablauf) und [Regeln lernen](#regeln-lernen)).
 6. **Dateien schreiben.** `profile.json` aus `templates/profile.template.json` mit den fünf
    Antworten (`sex`, `birth_year`, `height_cm`, `start_weight_kg`, `activity_factor`); alle
    übrigen Werte bleiben wie in der Vorlage. `habits.json` ist `templates/habits.template.json`
@@ -334,7 +338,10 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
    `node scripts/check-profile.js` aus. Bricht es bei der Alters- oder BMI-Prüfung ab, beende
    die Einrichtung mit einem Verweis an einen Arzt. Zeige sonst die Ausgabe als Information:
    Grundumsatz, Erhaltungsbedarf, Untergrenze Netto-Aufnahme und Nährstoffziele mit Rechenweg,
-   und sage, dass sich alles jederzeit ändern lässt. Stelle keine Bestätigungsfrage.
+   und sage, dass sich alles jederzeit ändern lässt. Frage dann einmal, ob der Nutzer die
+   Defizitgrenze von 500 kcal jetzt gleich ändern möchte (`max_deficit_kcal` in
+   `profile.json`). Bei Ja folge [Profiländerungen](#profiländerungen). Stelle keine weitere
+   Bestätigungsfrage.
 7. **Erster Tag.** Führe `node scripts/new-day.js $(date +%F)` aus. Berechne und berichte noch
    keine Bilanz. Commit: `git add -A && git commit -m "Set up profile"`. Sage dem Nutzer dann,
    er soll einfach erzählen, was er isst und macht.

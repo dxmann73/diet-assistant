@@ -261,8 +261,11 @@ little or no muscle.
   That is completely normal and no reason to worry. What counts is the 7-day average.
 - **Estimating is fine.** On days you cannot weigh yourself, eat out, or go to a dinner or a
   party, just estimate and don't be too precise. The method is built for the long term.
-- **Defaults are information.** Protein (floor 1.0 g/kg, target 1.25 g/kg, top 1.5 g/kg), fat
-  (0.8 g/kg) and the deficit cap (500 kcal) are defaults. The user can change them any time.
+- **Protein and fat.** The recommendation is at least 1.0 g of protein per kg of body weight
+  (target 1.25 g/kg, top 1.5 g/kg). The log tracks it because many people eat too little
+  protein. For fat it is 0.8 g per kg.
+- **The deficit cap is a default.** The user can change the 500 kcal in `profile.json`
+  (`max_deficit_kcal`), or ask the agent to; see [Profile changes](#profile-changes).
 - **Not medical advice.** Not meant for people under 18, people who are pregnant or
   breastfeeding, or people with a BMI under 18.5.
 
@@ -281,7 +284,8 @@ Keep it friendly and short. Ask nothing beyond what this section lists.
    is the public template, and pushing personal health data there would publish it. Offer to
    rename it with `git remote rename origin template`. Do it on yes.
 4. **Explanation.** Explain [the approach](#the-approach) in a few sentences: the goal, the
-   three principles and the reason, weighing, estimating, and that the defaults are information.
+   three principles and the reason, weighing, estimating, protein and fat, and that the deficit
+   cap is a default.
    Say clearly that this is not medical advice and not meant for people under 18, people who
    are pregnant or breastfeeding, or people with a BMI under 18.5. State it; do not ask about
    it.
@@ -294,17 +298,19 @@ Keep it friendly and short. Ask nothing beyond what this section lists.
      physical labour (1.55). Say that all exercise is logged separately. Never ask how much
      they exercise; that would count exercise twice.
 
-   Ask nothing else: no targets, no deficit cap, no diet style, no activities, no daily meals,
-   no food words, no weigh-in habit. Activities, meals and food words come up in daily use (see
-   [Daily workflow](#daily-workflow) and [Learning rules](#learning-rules)).
+   Ask nothing else: no targets, no deficit cap (step 6 offers that), no diet style, no
+   activities, no daily meals, no food words, no weigh-in habit. Activities, meals and food words
+   come up in daily use (see [Daily workflow](#daily-workflow) and [Learning rules](#learning-rules)).
 6. **Write the files.** `profile.json` from `templates/profile.template.json` with the five
    answers (`sex`, `birth_year`, `height_cm`, `start_weight_kg`, `activity_factor`); every other
    value keeps the template default. `habits.json` is `templates/habits.template.json` as it
    is; `rules.md` is `templates/rules.template.md` as it is. Run
    `node scripts/check-profile.js`. If it stops at the age or BMI gate, stop onboarding with a
    pointer to a doctor. Otherwise show its output as information: BMR, maintenance, net intake
-   floor and macro targets with working, and say that all of it can be changed any time. Ask
-   no confirmation question.
+   floor and macro targets with working, and say that all of it can be changed any time. Then
+   ask once whether they want to change the 500 kcal deficit cap right now (`max_deficit_kcal`
+   in `profile.json`). On yes, follow [Profile changes](#profile-changes). Ask no other
+   confirmation question.
 7. **First day.** Run `node scripts/new-day.js $(date +%F)`. Do not compute or report a balance
    yet. Commit: `git add -A && git commit -m "Set up profile"`. Then tell the user to just say
    what they eat and do.
