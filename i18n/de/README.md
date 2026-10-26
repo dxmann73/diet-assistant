@@ -66,8 +66,8 @@ der Körper baut kaum oder gar keine Muskeln ab.
 - **Eiweiß und Fett.** Empfohlen ist mindestens 1.0 g Eiweiß pro kg Körpergewicht (Ziel
   1.25 g/kg, Obergrenze 1.5 g/kg). Das Protokoll verfolgt das, weil viele Menschen zu wenig
   Eiweiß essen. Für Fett sind es 0.8 g pro kg.
-- **Die Defizitgrenze ist eine Vorgabe.** Du kannst die 500 kcal in `profile.json`
-  (`max_deficit_kcal`) ändern oder einfach den Assistenten bitten, sie zu ändern.
+- **Die Defizitgrenze ist eine Vorgabe.** Die 500 kcal stehen in `profile.json`
+  (`max_deficit_kcal`) und können dort geändert werden.
 
 ## Das Diagramm
 
