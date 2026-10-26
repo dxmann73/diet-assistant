@@ -265,6 +265,10 @@ little or no muscle.
   (target 1.25 g/kg, top 1.5 g/kg). The reason is that many people eat too little protein, and
   especially while losing weight it is important to get enough protein to avoid losing muscle.
   For fat it is 0.8 g per kg.
+- **Little sugar and white flour.** Largely avoiding sugar and white flour is advisable. They make
+  blood sugar and insulin swing strongly, which brings on cravings and makes hunger very hard to
+  control. Cutting down on sugar is a good idea anyway. The user should look more closely at how
+  much sugar is in what they eat. The method works without this too; it is just harder to stick to.
 - **The calorie deficit is a default.** The 500 kcal are in `profile.json` (`max_deficit_kcal`)
   and can be changed there; see [Profile changes](#profile-changes).
 - **Not medical advice.** Not meant for people under 18, people who are pregnant or
@@ -285,8 +289,8 @@ Keep it friendly and short. Ask nothing beyond what this section lists.
    is the public template, and pushing personal health data there would publish it. Offer to
    rename it with `git remote rename origin template`. Do it on yes.
 4. **Explanation.** Explain [the approach](#the-approach) in a few sentences: the goal, the
-   three principles and the reason, weighing, estimating, protein and fat, and that the calorie
-   deficit is a default.
+   three principles and the reason, weighing, estimating, protein and fat, sugar and white flour,
+   and that the calorie deficit is a default.
    Say clearly that this is not medical advice and not meant for people under 18, people who
    are pregnant or breastfeeding, or people with a BMI under 18.5. State it; do not ask about
    it.

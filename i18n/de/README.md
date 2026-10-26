@@ -67,6 +67,11 @@ der Körper baut kaum oder gar keine Muskeln ab.
   1.25 g/kg, Obergrenze 1.5 g/kg). Der Grund ist, dass viele Menschen zu wenig Eiweiß essen
   und wir insbesondere beim Abnehmen auf ausreichende Eiweißzufuhr achten sollten, um
   Muskelverlust zu vermeiden. Für Fett sind es 0.8 g pro kg.
+- **Wenig Zucker und Weißmehl.** Ein weitgehender Verzicht auf Zucker und Weißmehl ist ratsam. Beide
+  lassen Blutzucker und Insulin stark schwanken; das löst Heißhungerattacken aus und macht es sehr
+  schwer, den Hunger zu kontrollieren. Weniger Zucker ist ohnehin zu empfehlen. Schau genauer hin,
+  wie viel Zucker in dem steckt, was du isst. Die Methode funktioniert auch so, sie ist dann nur
+  schwerer durchzuhalten.
 - **Das Kaloriendefizit ist eine Vorgabe.** Die 500 kcal stehen in `profile.json`
   (`max_deficit_kcal`) und können dort geändert werden.
 

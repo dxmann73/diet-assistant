@@ -60,6 +60,10 @@ little or no muscle.
   (target 1.25 g/kg, top 1.5 g/kg). The reason is that many people eat too little protein, and
   especially while losing weight it is important to get enough protein to avoid losing muscle.
   For fat it is 0.8 g per kg.
+- **Little sugar and white flour.** Largely avoiding sugar and white flour is advisable. They make
+  blood sugar and insulin swing strongly, which brings on cravings and makes hunger very hard to
+  control. Cutting down on sugar is a good idea anyway. Look more closely at how much sugar is in
+  what you eat. The method works without this too; it is just harder to stick to.
 - **The calorie deficit is a default.** The 500 kcal are in `profile.json` (`max_deficit_kcal`)
   and can be changed there.
 

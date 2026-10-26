@@ -290,6 +290,11 @@ der Körper baut kaum oder gar keine Muskeln ab.
   1.25 g/kg, Obergrenze 1.5 g/kg). Der Grund ist, dass viele Menschen zu wenig Eiweiß essen
   und man insbesondere beim Abnehmen auf ausreichende Eiweißzufuhr achten sollte, um
   Muskelverlust zu vermeiden. Für Fett sind es 0.8 g pro kg.
+- **Wenig Zucker und Weißmehl.** Ein weitgehender Verzicht auf Zucker und Weißmehl ist ratsam. Beide
+  lassen Blutzucker und Insulin stark schwanken; das löst Heißhungerattacken aus und macht es sehr
+  schwer, den Hunger zu kontrollieren. Weniger Zucker ist ohnehin zu empfehlen. Es lohnt sich,
+  genauer hinzuschauen, wie viel Zucker in dem steckt, was man isst. Die Methode funktioniert auch
+  so, sie ist dann nur schwerer durchzuhalten.
 - **Das Kaloriendefizit ist eine Vorgabe.** Die 500 kcal stehen in `profile.json`
   (`max_deficit_kcal`) und können dort geändert werden; siehe
   [Profiländerungen](#profiländerungen).
@@ -314,8 +319,8 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
    Gesundheitsdaten dorthin zu übertragen würde sie veröffentlichen. Biete an, es mit
    `git remote rename origin template` umzubenennen. Führe das bei Zustimmung aus.
 4. **Erklärung.** Erkläre [die Methode](#die-methode) in wenigen Sätzen: das Ziel, die drei
-   Grundsätze und den Grund, das Wiegen, das Schätzen, Eiweiß und Fett und dass das
-   Kaloriendefizit eine Vorgabe ist.
+   Grundsätze und den Grund, das Wiegen, das Schätzen, Eiweiß und Fett, Zucker und Weißmehl
+   und dass das Kaloriendefizit eine Vorgabe ist.
    Sage deutlich, dass dies keine medizinische Beratung ist und dass die Methode nicht für
    Menschen unter 18, Schwangere und Stillende sowie Menschen mit einem BMI unter 18.5 gedacht
    ist. Sage es; frage nicht danach.
