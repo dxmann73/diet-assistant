@@ -52,7 +52,8 @@ The reason: at 500 kcal, hunger stays limited and bearable for longer, and the b
 little or no muscle.
 
 - **Weighing.** In the morning, fasted, after the toilet, always under the same conditions. The
-  7-day average counts, not a single reading.
+  weight goes up and down from day to day, often by a kilo or more, mostly because of water.
+  That is completely normal and no reason to worry. What counts is the 7-day average.
 - **Estimating is fine.** On days you cannot weigh yourself, eat out, or go to a dinner or a
   party, just estimate and don't be too precise. The method is built for the long term.
 - **Defaults are information.** Protein (floor 1.0 g/kg, target 1.25 g/kg, top 1.5 g/kg), fat

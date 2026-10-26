@@ -58,7 +58,8 @@ Der Grund: Bei 500 kcal bleibt der Hunger begrenzt und auch über längere Zeit 
 der Körper baut kaum oder gar keine Muskeln ab.
 
 - **Wiegen.** Morgens, nüchtern, nach dem Toilettengang, immer unter gleichen Bedingungen. Das
-  7-Tage-Mittel zählt, nicht der einzelne Wert.
+  Gewicht schwankt von Tag zu Tag, oft um ein Kilo oder mehr, vor allem durch Wasser.
+  Das ist völlig normal und kein Grund zur Sorge. Es zählt das 7-Tage-Mittel.
 - **Schätzen ist erlaubt.** An Tagen, an denen du dich nicht wiegen kannst, auswärts isst oder
   zu einem Essen oder einer Feier eingeladen bist: einfach schätzen und es nicht zu genau
   nehmen. Die Methode ist auf lange Sicht angelegt.
