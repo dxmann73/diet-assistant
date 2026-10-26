@@ -33,8 +33,11 @@ function extract(root) {
 
 // Sanity check, not a silent correction: magnitudes that almost always mean a
 // bad number was copied into the block. Callers print the localized warning.
+// Open days are skipped: a half-logged day has a large deficit by design.
 function implausible(rows) {
-  return rows.filter((r) => Math.abs(r.deficit_kcal) > 1500).map((r) => `${r.date}=${r.deficit_kcal}`);
+  return rows
+    .filter((r) => r.status !== 'open' && Math.abs(r.deficit_kcal) > 1500)
+    .map((r) => `${r.date}=${r.deficit_kcal}`);
 }
 
 function main(argv) {

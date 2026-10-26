@@ -59,6 +59,15 @@ test('German: new-day, check-protocols and gen-chart lines', () => {
   assert.match(chart.stderr, /^WARNUNG: unplausibles Defizit, bitte den metrics-Block prüfen: 2030-01-13=/m);
 });
 
+test('open days skip the implausible-deficit warning', () => {
+  const root = enRoot();
+  writeProtocol(root, '2030-01-13', { language: 'en', status: 'open' });
+  computeAndPaste(root, '2030-01-13', 'en');
+  const chart = run('gen-chart-cdn.js', root);
+  assert.equal(chart.code, 0);
+  assert.doesNotMatch(chart.stderr, /implausible/);
+});
+
 test('German: no weigh-in warning', () => {
   const root = deRoot();
   writeProtocol(root, '2030-01-15', { language: 'de', status: 'estimated', metrics: { deficit_kcal: 300 } });

@@ -94,13 +94,15 @@ Alle laufen mit Node 20 oder neuer, ohne Abhängigkeiten. Alle akzeptieren `--ro
    2. Offene Fragen, alle auf einmal. Überspringe diesen Punkt, wenn es keine gibt.
    3. Das Defizit des Tages, dann Aufnahme, Verbrauch Sport, Netto-Aufnahme, Eiweiß im
       Vergleich zu Untergrenze und Ziel, Fett und Kohlenhydrate im Vergleich zum Ziel sowie
-      jede Warnung. An einem offenen Tag sagt die Zeile „Tag noch offen“, was noch fehlt.
+      jede Warnung. An einem offenen Tag sagt die Zeile „Tag noch offen“, was noch fehlt;
+      füge keine eigene Defizitwarnung hinzu.
 7. Sobald Frühstück, Mittagessen, Abendessen und die Aktivitäten des Tages protokolliert sind,
    frage: „Tag abschließen?“
 
 „Den Tag abschließen“ bedeutet: Setze `status: closed` im Kennzahlenblock, wiederhole die
-Schritte 4 und 5 und erstelle dann mit `git commit` einen Commit mit dem Tagesprotokoll sowie
-neuen Lebensmitteln oder Rezepten. Übertrage ihn niemals ohne Aufforderung des Nutzers mit Push.
+Schritte 4 und 5 und erstelle dann mit `git commit` einen Commit mit dem Tagesprotokoll,
+`charts/chart-cdn.html` sowie neuen Lebensmitteln oder Rezepten. Übertrage ihn niemals ohne
+Aufforderung des Nutzers mit Push.
 
 Ein Tag außer Haus ohne einzelne Einträge: Erstelle die Datei, setze `status: estimated`,
 behalte die Überschriften für Essen und Sport und führe `compute-day.js` aus. Füge die Ausgabe
@@ -221,8 +223,9 @@ Erhaltungsbedarf zu essen. Gib die Defizitwarnung immer weiter, wenn das Skript 
 
 ## Rezepte
 
-Ein zusammengesetztes Gericht, das der Nutzer mehr als einmal isst, wird zu `recipes/<id>.md`,
-auf Grundlage von `templates/recipe.template.md`:
+Protokolliere ein zusammengesetztes Gericht mit einer Zeile pro Zutat. Nennt der Nutzer es
+„wie immer“ oder wiederholt es sich, biete an, es als Rezept zu speichern; lege
+`recipes/<id>.md` nur bei Zustimmung an, auf Grundlage von `templates/recipe.template.md`:
 
 - Metadaten: `id` (entspricht dem Dateinamen), `name`, `yield_units`, `yield_count`,
   `serving_default` und die Summen pro Portion `serving_kcal`, `serving_protein_g`,
@@ -318,12 +321,10 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
    `dxmann73/diet-assistant`, warne: Das ist die öffentliche Vorlage. Persönliche
    Gesundheitsdaten dorthin zu übertragen würde sie veröffentlichen. Biete an, es mit
    `git remote rename origin template` umzubenennen. Führe das bei Zustimmung aus.
-4. **Erklärung.** Erkläre [die Methode](#die-methode) in wenigen Sätzen: das Ziel, die drei
-   Grundsätze und den Grund, das Wiegen, das Schätzen, Eiweiß und Fett, Zucker und Weißmehl
-   und dass das Kaloriendefizit eine Vorgabe ist.
-   Sage deutlich, dass dies keine medizinische Beratung ist und dass die Methode nicht für
-   Menschen unter 18, Schwangere und Stillende sowie Menschen mit einem BMI unter 18.5 gedacht
-   ist. Sage es; frage nicht danach.
+4. **Erklärung.** Gib [die Methode](#die-methode) fast wörtlich wieder, in der Du-Form: das
+   Ziel, die drei Grundsätze und den Grund sowie jeden Stichpunkt. Kürze nichts, fasse nichts
+   zusammen, lass keinen Punkt weg. Nenne den Hinweis zur medizinischen Beratung; frage nicht
+   danach.
 5. **Fragebogen**, eine Gruppe mit genau diesen Fragen:
    - Geschlecht (weiblich/männlich, als `female`/`male` für die BMR-Formel)
    - Geburtsjahr

@@ -88,12 +88,12 @@ All run with Node 20 or newer, no dependencies. All accept `--root <dir>` (defau
    2. Open questions, all in one batch. Skip this when there are none.
    3. The day's deficit, then intake, burn, net intake, protein against floor and target, fat
       and carbs against target, and every flag. On an open day, the open-day line says what is
-      still missing.
+      still missing; do not add a deficit warning of your own.
 7. Once breakfast, lunch, dinner and the day's activities are logged, ask "Close the day?".
 
 "Close the day" means: set `status: closed` in the metrics block, run steps 4 and 5 again, then
-commit the day's protocol and any new foods or recipes with `git commit`. Never push unless the
-user asks.
+commit the day's protocol, `charts/chart-cdn.html` and any new foods or recipes with
+`git commit`. Never push unless the user asks.
 
 A day away with nothing itemized: create the file, set `status: estimated`, keep the food and
 exercise headings, run `compute-day.js` and paste as usual. It uses the deficit already in the
@@ -204,7 +204,8 @@ Always pass on the deficit warning when the script prints it.
 
 ## Recipes
 
-A composed dish the user eats more than once becomes `recipes/<id>.md`, built from
+Log a composed dish as one line per ingredient. When the user calls it their usual or it
+repeats, offer to save it as a recipe; write `recipes/<id>.md` only on yes, built from
 `templates/recipe.template.md`:
 
 - Frontmatter: `id` (equals the filename), `name`, `yield_units`, `yield_count`,
@@ -288,12 +289,9 @@ Keep it friendly and short. Ask nothing beyond what this section lists.
 3. **Remote.** Run `git remote -v`. If `origin` points at `dxmann73/diet-assistant`, warn: this
    is the public template, and pushing personal health data there would publish it. Offer to
    rename it with `git remote rename origin template`. Do it on yes.
-4. **Explanation.** Explain [the approach](#the-approach) in a few sentences: the goal, the
-   three principles and the reason, weighing, estimating, protein and fat, sugar and white flour,
-   and that the calorie deficit is a default.
-   Say clearly that this is not medical advice and not meant for people under 18, people who
-   are pregnant or breastfeeding, or people with a BMI under 18.5. State it; do not ask about
-   it.
+4. **Explanation.** Give [the approach](#the-approach) almost word for word, addressing the
+   user directly: the goal, the three principles and the reason, and every bullet. Do not
+   shorten, merge or drop points. State the disclaimer; do not ask about it.
 5. **Questionnaire**, one batch with exactly these questions:
    - sex (female/male, for the BMR formula)
    - birth year
