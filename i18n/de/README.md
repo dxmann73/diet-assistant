@@ -64,9 +64,10 @@ der Körper baut kaum oder gar keine Muskeln ab.
   zu einem Essen oder einer Feier eingeladen bist: einfach schätzen und es nicht zu genau
   nehmen. Die Methode ist auf lange Sicht angelegt.
 - **Eiweiß und Fett.** Empfohlen ist mindestens 1.0 g Eiweiß pro kg Körpergewicht (Ziel
-  1.25 g/kg, Obergrenze 1.5 g/kg). Das Protokoll verfolgt das, weil viele Menschen zu wenig
-  Eiweiß essen. Für Fett sind es 0.8 g pro kg.
-- **Die Defizitgrenze ist eine Vorgabe.** Die 500 kcal stehen in `profile.json`
+  1.25 g/kg, Obergrenze 1.5 g/kg). Der Grund ist, dass viele Menschen zu wenig Eiweiß essen
+  und wir insbesondere beim Abnehmen auf ausreichende Eiweißzufuhr achten sollten, um
+  Muskelverlust zu vermeiden. Für Fett sind es 0.8 g pro kg.
+- **Das Kaloriendefizit ist eine Vorgabe.** Die 500 kcal stehen in `profile.json`
   (`max_deficit_kcal`) und können dort geändert werden.
 
 ## Das Diagramm

@@ -260,7 +260,7 @@ Wenn der Nutzer „merke dir …“, „ab jetzt …“, „immer …“ oder Ä
 ## Profiländerungen
 
 `profile.json` ändert sich nur, nachdem der Nutzer die genauen neuen Werte bestätigt hat.
-Führe danach `node scripts/check-profile.js` aus und zeige die Ausgabe. Bei einer Defizitgrenze
+Führe danach `node scripts/check-profile.js` aus und zeige die Ausgabe. Bei einem Kaloriendefizit
 über 500 kcal kommt immer zuerst die Warnung aus [der Methode](#die-methode), dann eine zweite
 Bestätigung.
 
@@ -287,9 +287,10 @@ der Körper baut kaum oder gar keine Muskeln ab.
   zu einem Essen oder einer Feier eingeladen ist: einfach schätzen und es nicht zu genau
   nehmen. Die Methode ist auf lange Sicht angelegt.
 - **Eiweiß und Fett.** Empfohlen ist mindestens 1.0 g Eiweiß pro kg Körpergewicht (Ziel
-  1.25 g/kg, Obergrenze 1.5 g/kg). Das Protokoll verfolgt das, weil viele Menschen zu wenig
-  Eiweiß essen. Für Fett sind es 0.8 g pro kg.
-- **Die Defizitgrenze ist eine Vorgabe.** Die 500 kcal stehen in `profile.json`
+  1.25 g/kg, Obergrenze 1.5 g/kg). Der Grund ist, dass viele Menschen zu wenig Eiweiß essen
+  und man insbesondere beim Abnehmen auf ausreichende Eiweißzufuhr achten sollte, um
+  Muskelverlust zu vermeiden. Für Fett sind es 0.8 g pro kg.
+- **Das Kaloriendefizit ist eine Vorgabe.** Die 500 kcal stehen in `profile.json`
   (`max_deficit_kcal`) und können dort geändert werden; siehe
   [Profiländerungen](#profiländerungen).
 - **Keine medizinische Beratung.** Nicht gedacht für Menschen unter 18, Schwangere und
@@ -313,8 +314,8 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
    Gesundheitsdaten dorthin zu übertragen würde sie veröffentlichen. Biete an, es mit
    `git remote rename origin template` umzubenennen. Führe das bei Zustimmung aus.
 4. **Erklärung.** Erkläre [die Methode](#die-methode) in wenigen Sätzen: das Ziel, die drei
-   Grundsätze und den Grund, das Wiegen, das Schätzen, Eiweiß und Fett und dass die
-   Defizitgrenze eine Vorgabe ist.
+   Grundsätze und den Grund, das Wiegen, das Schätzen, Eiweiß und Fett und dass das
+   Kaloriendefizit eine Vorgabe ist.
    Sage deutlich, dass dies keine medizinische Beratung ist und dass die Methode nicht für
    Menschen unter 18, Schwangere und Stillende sowie Menschen mit einem BMI unter 18.5 gedacht
    ist. Sage es; frage nicht danach.
@@ -327,7 +328,7 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
      körperliche Arbeit (1.55). Sage, dass Sport immer getrennt protokolliert wird. Frage nie,
      wie viel Sport der Nutzer macht; das würde Sport doppelt zählen.
 
-   Frage nichts anderes: keine Ziele, keine Defizitgrenze, keine
+   Frage nichts anderes: keine Ziele, kein Kaloriendefizit, keine
    Ernährungsweise, keine Aktivitäten, keine täglichen Mahlzeiten, keine Lebensmittelwörter,
    keine Wiegegewohnheit. Aktivitäten, Mahlzeiten und Lebensmittelwörter ergeben sich im Alltag
    (siehe [Täglicher Ablauf](#täglicher-ablauf) und [Regeln lernen](#regeln-lernen)).
@@ -338,7 +339,7 @@ Bleibe freundlich und kurz. Frage nichts, was dieser Abschnitt nicht nennt.
    `node scripts/check-profile.js` aus. Bricht es bei der Alters- oder BMI-Prüfung ab, beende
    die Einrichtung mit einem Verweis an einen Arzt. Zeige sonst die Ausgabe als Information:
    Grundumsatz, Erhaltungsbedarf, Untergrenze Netto-Aufnahme und Nährstoffziele mit Rechenweg,
-   und sage, dass sich alles jederzeit ändern lässt. Sage, dass die Defizitgrenze von 500 kcal
+   und sage, dass sich alles jederzeit ändern lässt. Sage, dass das Kaloriendefizit von 500 kcal
    in `profile.json` (`max_deficit_kcal`) steht und dort geändert werden kann. Stelle keine
    Frage.
 7. **Erster Tag.** Führe `node scripts/new-day.js $(date +%F)` aus. Berechne und berichte noch
